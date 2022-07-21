@@ -92,4 +92,4 @@ const saveProductCartItems = async (event) => {
 // const getSkuFromProductItem = (item) => item.querySelector('span.item__sku').innerText;
 
 window.onload = () => { };
-buttonClear.addEventListener('click', clearItens);
+// buttonClear.addEventListener('click', clearItens);
