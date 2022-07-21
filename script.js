@@ -12,7 +12,7 @@ const createCustomElement = (element, className, innerText) => {
   return e;
 };
 
-const createProductItemElement = ({ sku, name, image }) => {
+  const createProductItemElement = ({ sku, name, image }) => {
   const section = document.createElement('section');
   section.className = 'item';
 
@@ -24,10 +24,8 @@ const createProductItemElement = ({ sku, name, image }) => {
   return section;
 };
 
-const getSkuFromProductItem = (item) => item.querySelector('span.item__sku').innerText;
-
 const cartItemClickListener = (event) => {
-  // coloque seu código aqui
+  event.target.remove();
 };
 
 const createCartItemElement = ({ sku, name, salePrice }) => {
@@ -38,4 +36,60 @@ const createCartItemElement = ({ sku, name, salePrice }) => {
   return li;
 };
 
+const addItemCart = async (product) => {
+  const data = await fetchItem(product);
+  // console.log(data);
+    const sku = data.id;
+    const name = data.title;
+    const salePrice = data.price;
+    const item = document.querySelector('.cart__items');
+  // console.log(item);
+
+  item.appendChild(createCartItemElement({ sku, name, salePrice }));
+  
+  // createCartItemElement({ sku, name, salePrice });
+  
+  // });
+};
+
+function addEventButton(event) {
+// console.log(event.target.parentElement.firstChild);
+const id = event.target.parentElement.firstChild.innerText;
+// console.log(id);
+addItemCart(id);
+}
+
+const getOneElement = async () => {
+    // primeiro: chamar a função fetchProducts com parâmetro
+    const data = await fetchProducts('computador');
+    // segundo: percorrer o array 
+    // terceiro: a cada iteração, chamar createProductItemElement
+    data.results.forEach((element) => {
+      const sku = element.id;
+      const name = element.title;
+      const image = element.thumbnail;
+      const items = document.querySelector('.items');
+      const currentElement = createProductItemElement({ sku, name, image });
+      const button = currentElement.lastChild;
+      const clearButton = document.querySelector('.empty-cart');
+      button.addEventListener('click', addEventButton);
+
+      items.appendChild(currentElement);
+    });
+};
+
+const clearCartItems = () => {
+  const ol = document.querySelector('.cart__items');
+  ol.innerHTML = '';
+};
+
+getOneElement();
+
+const saveProductCartItems = async (event) => {
+
+};
+
+// const getSkuFromProductItem = (item) => item.querySelector('span.item__sku').innerText;
+
 window.onload = () => { };
+buttonClear.addEventListener('click', clearItens);
