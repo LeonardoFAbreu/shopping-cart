@@ -1,6 +1,4 @@
-// const subTotal = document.querySelector('.total-price');
 const clearCartButton = document.querySelector('.empty-cart');
-// const cartClass = document.querySelector('.cart__items');
 const [loadingElement] = document.getElementsByClassName('loading');
 
 const createProductImageElement = (imageSource) => {
@@ -17,6 +15,19 @@ const createCustomElement = (element, className, innerText) => {
   return e;
 };
 
+const sumValues = async () => {
+  const getCartList = document.querySelectorAll('.cart__item');
+  const getResult = document.querySelector('.total-price');
+  const result = Array.from(getCartList)
+    .map((e) => e.innerHTML.split('$')[1])
+    .reduce((acc, curr) => {
+    let sum = acc;
+    sum += Number(curr);
+    return (sum);
+  }, 0);
+  getResult.innerHTML = result;
+};
+
   const createProductItemElement = ({ sku, name, image }) => {
   const section = document.createElement('section');
   section.className = 'item';
@@ -29,20 +40,9 @@ const createCustomElement = (element, className, innerText) => {
   return section;
 };
 
-// const updateSubtotal = async () => {
-//   const price = [...document.getElementsByClassName('cart__item')]
-//     .map((element) => element.innerText)
-//     .map((content) => content.match(/\$(\d+\.?\d+)/m)[1])
-//     .map((stringNumber) => Number(stringNumber))
-//     .reduce((total, current) => total + current, 0);
-
-//   // subtotalElement.innerText = price.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
-//   subTotal.innerText = price;
-// };
-
 const cartItemClickListener = (event) => {
   event.target.remove();
-  // updateSubtotal();
+  sumValues();
 };
 
 const createCartItemElement = ({ sku, name, salePrice }) => {
@@ -50,7 +50,7 @@ const createCartItemElement = ({ sku, name, salePrice }) => {
   li.className = 'cart__item';
   li.innerText = `SKU: ${sku} | NAME: ${name} | PRICE: $${salePrice}`;
   li.addEventListener('click', cartItemClickListener);
-  // updateSubtotal();
+  
   return li;
  };
 
@@ -63,8 +63,9 @@ const addItemCart = async (product) => {
     const item = document.querySelector('.cart__items');
     // getLoadingMsg();
   // console.log(item);
-
   item.appendChild(createCartItemElement({ sku, name, salePrice }));
+
+  sumValues();
 };
 
 function addEventButton(event) {
@@ -121,4 +122,5 @@ const sendProducts = async () => {
 window.onload = async () => {
 clearCartButton.addEventListener('click', clearCartItems);
 sendProducts();
+await sumValues();
 };
